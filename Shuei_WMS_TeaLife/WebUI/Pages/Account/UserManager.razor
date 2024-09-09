@@ -41,7 +41,7 @@
                             </RadzenDataGridColumn>
                             <RadzenDataGridColumn TItem="GetUserWithRoleResponseDTO" Filterable="false" Sortable="true" TextAlign="TextAlign.Center" Frozen="true" FrozenPosition="FrozenColumnPosition.Right">
                                 <Template Context="data">
-                                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="edit" Variant="Variant.Flat" Shade="Shade.Lighter"
+                                    <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="edit" Variant="Variant.Flat" Shade="Shade.Lighter"
                                                   Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => EditItemAsync(data.UserName))" @onclick:stopPropagation="true" />
                                     <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter"
                                                       Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => DeleteItemAsync(data.UserName))" @onclick:stopPropagation="true"/>
