@@ -6,10 +6,11 @@
         public const string HttpClientName = "WebUIClient";
         public const string HttpClientHeaderScheme = "Bearer";
 
-        public static class Role
+        public static class Roles
         {
+            public const string SupperAdmin = "SupperAdmin";
             public const string Admin = "Admin";
-            public const string User = "User";
+            public const string Operator = "Operator";
         }
 
         public static class StorageConst

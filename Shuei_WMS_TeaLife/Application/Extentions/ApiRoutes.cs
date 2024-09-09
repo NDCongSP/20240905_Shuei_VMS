@@ -32,13 +32,15 @@ namespace Application.Extentions
             public const string Login = "identity/login";
             public const string CreateAccount = "identity/create";
             public const string RefreshToken = "identity/refresh-token";
-            public const string RoleCreate = "identity/role/create";
+            public const string CreateRole = "identity/role/create";
             public const string RoleList = "identity/role/list";
-            public const string CreateAdminAccount = "identity/setting";
+            public const string CreateSuperAdminAccount = "identity/setting";
             public const string UserWithRole = "identity/user-with-role";
             public const string ChangePassword = "identity/change-pass";
-            public const string ChangrRole = "identity/change-role";
+            public const string ChangeUserRole = "identity/change-role";
             public const string AssignUserRole = "identity/assign_user_role";
+            public const string DeleteUser = "identity/delete-user";
+            public const string DeleteUserRole = "identity/delete-user-role";
             //public const string GetFromToByName = "GetByName/{from}/{to}/{tenChuong}";
         }
 

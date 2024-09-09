@@ -57,7 +57,7 @@ builder.Services.AddHttpClient("API")
     //    handler.ConfigureHandler(["/login"]);
     //    return handler;
     //})
-    .AddHttpMessageHandler<AuthenticationHeaderHandler>()
+    .AddHttpMessageHandler<AuthenticationHeaderHandler>()    
     .UseWithRestEaseClient<IProduct>()
     .UseWithRestEaseClient<IUnit>();
 

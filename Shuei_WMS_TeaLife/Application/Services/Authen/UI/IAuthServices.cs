@@ -14,18 +14,19 @@ namespace Application.Services.Authen.UI
     [BaseAddress(ApiRoutes.Identity.BasePath)]
     public interface IAuthServices
     {
-        Task CreateAdmin();
+        Task<GeneralResponse> CreateSuperAdminAsync();
         Task<GeneralResponse> CreateAccountAsync(CreateAccountRequestDTO model);
         Task<LoginResponse> LoginAccountAsync(LoginRequestDTO model);
         Task<LoginResponse> RefreshTokenAsync(RefreshTokenRequestDTO model);
         Task<GeneralResponse> CreateRoleAsysnc(CreateRoleRequestDTO model);
-        Task<IEnumerable<GetRoleResponseDTO>> GetRolesAsync();
-        Task<IEnumerable<GetUserWithRoleResponseDTO>> GetUsersWithRolesAsync();
+        Task<List<GetRoleResponseDTO>> GetRolesAsync();
+        Task<List<GetUserWithRoleResponseDTO>> GetUsersWithRolesAsync();
         Task<GeneralResponse> ChangeUserRoleAsync(AssignUserRoleRequestDTO model);
         Task<GeneralResponse> ChangePassAsync(ChangePassRequestDTO model);
         Task<GeneralResponse> AssignUserRoleAsync(AssignUserRoleRequestDTO model);
 
         //Task<string> TryRefreshTokenAsync(RefreshTokenRequestDTO model);
         Task LogoutAsync();
+        Task<GeneralResponse> DeleteUserAsync(string userName);
     }
 }

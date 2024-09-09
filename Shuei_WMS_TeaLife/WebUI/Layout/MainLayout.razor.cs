@@ -13,6 +13,16 @@ namespace WebUI.Layout
             
         }
 
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+
+            }
+
+            base.OnAfterRender(firstRender);
+        }
+
         public void Dispose()
         {
         }

@@ -23,7 +23,6 @@ builder.Services.AddSwaggerGen(c =>
         }
         return desc.GroupName;
     });
-
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "WMS API",
@@ -35,7 +34,6 @@ builder.Services.AddSwaggerGen(c =>
             Email = "your.email@example.com",
         }
     });
-
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
         Name = "Authorization",
@@ -44,7 +42,6 @@ builder.Services.AddSwaggerGen(c =>
         Type = SecuritySchemeType.Http,
         Scheme = "Bearer",
     });
-
     c.AddSecurityRequirement(new OpenApiSecurityRequirement()
                   {
                     {

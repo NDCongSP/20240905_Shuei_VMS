@@ -20,9 +20,9 @@
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <NotAuthorized>
-                    @if (context.User.Identity == null || !context.User.Identity.IsAuthenticated)
+                    @if (!context.User.Claims.Any())
                     {
-                        <WebUI.Layout.Components.RedirectToLogin/>
+                        <WebUI.Pages.Components.RedirectToLogin/>
                     }
                     else
                     {
@@ -40,3 +40,7 @@
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
+
+@code {
+
+}

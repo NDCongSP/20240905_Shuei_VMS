@@ -16,6 +16,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using static Application.Extentions.ConstantExtention;
 //using static Application.Extentions.Constant;
 
 namespace Infrastructure.Repos
@@ -35,18 +36,28 @@ namespace Infrastructure.Repos
 
         private static string GenerateRefreshToken() => Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
 
-        private async Task<GeneralResponse> AssignUserToRole(ApplicationUser user, IdentityRole role)
+        private async Task<GeneralResponse> AssignUserToRole(ApplicationUser user, List<CreateRoleRequestDTO> roles)
         {
-            if (user == null || role is null)
+            string roleString = string.Empty;
+
+            if (user == null || roles is null)
                 return new GeneralResponse()
                 {
                     Flag = false,
                     Message = "Model state cannot be empty"
                 };
 
-            if (await FindRoleByNameAsync(role.Name) == null) await CreateRoleAsysnc(role.Adapt(new CreateRoleRequestDTO()));
+            IdentityResult result = null;
 
-            IdentityResult result = await userManager.AddToRoleAsync(user, role.Name);
+            foreach (var role in roles)
+            {
+                var r = await FindRoleByNameAsync(role.Name);
+                if (r == null) await CreateRoleAsysnc(new CreateRoleRequestDTO() { Name = r.Name });
+
+                result = await userManager.AddToRoleAsync(user, role.Name);
+                roleString = $"{roleString};{role.Name}";
+            }
+
             string error = CheckReponse(result);
             if (!string.IsNullOrEmpty(error))
                 return new GeneralResponse()
@@ -58,7 +69,7 @@ namespace Infrastructure.Repos
                 return new GeneralResponse()
                 {
                     Flag = true,
-                    Message = $"{user.Name} assigned to {role.Name} role"
+                    Message = $"{user.FullName} assigned to {roleString} role"
                 };
         }
 
@@ -73,47 +84,21 @@ namespace Infrastructure.Repos
             return null;
         }
 
-        private async Task<string> GenerateToken1(ApplicationUser user)
-        {
-            try
-            {
-                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!));
-                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-                var userClaims = new[]
-                {
-                    new Claim(ClaimTypes.Name,user.Email),
-                    new Claim(ClaimTypes.Email,user.Email),
-                    new Claim(ClaimTypes.Role,(await userManager.GetRolesAsync(user)).FirstOrDefault().ToString()),
-                    new Claim("FullName",user.Name)
-                };
-
-                var token = new JwtSecurityToken(
-                    issuer: config["Jwt:Issuer"],
-                    audience: config["Jwt:Audience"],
-                    claims: userClaims,
-                    expires: DateTime.Now.AddMinutes(double.TryParse(config["JwtExpiryTime"], out double value) ? value : 30),
-                    signingCredentials: credentials
-                    );
-                return new JwtSecurityTokenHandler().WriteToken(token);
-            }
-            catch
-            {
-                return null;
-            }
-        }
         private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var expiry = DateTime.Now.AddMinutes(double.TryParse(config["JwtExpiryTime"], out double value) ? value : 60);
+            var expiry = DateTime.Now.AddMinutes(double.TryParse(config["Jwt:JwtExpiryTime"], out double value) ? value : 60);
 
-            var userClaims = new[]
+            var userClaims = new List<Claim>()
                {
-                    new Claim(ClaimTypes.Name,user.Email),
+                    new Claim(ClaimTypes.Name,user.UserName),
                     new Claim(ClaimTypes.Email,user.Email),
-                    new Claim(ClaimTypes.Role,(await userManager.GetRolesAsync(user)).FirstOrDefault().ToString()),
-                    new Claim("FullName",user.Name)
+                    new Claim("FullName",user.FullName)
                 };
+            var roles = await userManager.GetRolesAsync(user);
+            var roleClaims = roles.Select(x => new Claim(ClaimTypes.Role, x));
+            userClaims.AddRange(roleClaims);
 
             var token = new JwtSecurityToken(
                 issuer: config["JWT:Issuer"],
@@ -211,8 +196,8 @@ namespace Infrastructure.Repos
 
                 var user = new ApplicationUser()
                 {
-                    Name = model.Name,
-                    UserName = model.Name,
+                    FullName = model.FullName,
+                    UserName = model.UserName,
                     Email = model.Email,
                     PasswordHash = model.Password
                 };
@@ -226,7 +211,7 @@ namespace Infrastructure.Repos
                         Message = error
                     };
 
-                var res = await AssignUserToRole(user, new IdentityRole() { Name = model.Role });
+                var res = await AssignUserToRole(user, model.Roles);
                 return new GeneralResponse()
                 {
                     Flag = res.Flag,
@@ -243,25 +228,30 @@ namespace Infrastructure.Repos
             }
         }
 
-        public async Task CreateAdmin()
+        public async Task<GeneralResponse> CreateSuperAdminAsync()
         {
             try
             {
-                if ((await FindRoleByNameAsync(ConstantExtention.Role.Admin)) != null) return;
-                var admin = new CreateAccountRequestDTO()
+                var roles = new List<CreateRoleRequestDTO>();
+                roles.Add(new CreateRoleRequestDTO()
                 {
-                    Name = "Admin",
-                    Password = "Admin123@456",
-                    Email = "admin@gmail.com",
-                    Role = ConstantExtention.Role.Admin
+                    Name = ConstantExtention.Roles.SupperAdmin
+                });
+
+                var supeAdmin = new CreateAccountRequestDTO()
+                {
+                    FullName = "Super Admin",
+                    UserName = "SuperAdmin",
+                    Password = "SuperAdmin123@456",
+                    Email = "superadmin@gmail.com",
+                    Roles = roles
                 };
 
-                await CreateAccountAsync(admin);
+                return await CreateAccountAsync(supeAdmin);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                return new GeneralResponse() { Flag = false, Message = ex.Message };
             }
         }
 
@@ -301,10 +291,10 @@ namespace Infrastructure.Repos
             }
         }
 
-        public async Task<IEnumerable<GetRoleResponseDTO>> GetRolesAsync()
-            => (await roleManager.Roles.ToListAsync()).Adapt<IEnumerable<GetRoleResponseDTO>>();
+        public async Task<List<GetRoleResponseDTO>> GetRolesAsync()
+            => (await roleManager.Roles.ToListAsync()).Adapt<List<GetRoleResponseDTO>>();
 
-        public async Task<IEnumerable<GetUserWithRoleResponseDTO>> GetUsersWithRolesAsync()
+        public async Task<List<GetUserWithRoleResponseDTO>> GetUsersWithRolesAsync()
         {
             var allUsers = await userManager.Users.ToListAsync();
             if (allUsers == null) return null;
@@ -329,7 +319,9 @@ namespace Infrastructure.Repos
                 //var getRoleInfo = await roleManager.Roles.FirstOrDefaultAsync(x => x.Name.ToLower() == getUserRole.ToLower());
                 list.Add(new GetUserWithRoleResponseDTO()
                 {
-                    Name = user.Name,
+                    Id = user.Id,
+                    FullName = user.FullName,
+                    UserName = user.UserName,
                     Email = user.Email,
                     Roles = roles,
                     //RoleId = getRoleInfo.Id,
@@ -391,7 +383,7 @@ namespace Infrastructure.Repos
                         return new LoginResponse()
                         {
                             Flag = true,
-                            Message = $"{user.Name} successfully logged in.",
+                            Message = $"{user.FullName} successfully logged in.",
                             Token = token,
                             RefreshToken = refreshToken,
                             Expiration = jwtToken.ValidTo.ToString()
@@ -424,7 +416,7 @@ namespace Infrastructure.Repos
                 return new LoginResponse()
                 {
                     Flag = true,
-                    Message = $"{user.Name} successfully re-logged in.",
+                    Message = $"{user.FullName} successfully re-logged in.",
                     Token = newToken,
                     RefreshToken = newRefreshToken,
                     Expiration = newjwtToken.ValidTo.ToString()
@@ -472,11 +464,99 @@ namespace Infrastructure.Repos
                         Message = "User not found."
                     };
 
-                var result = await AssignUserToRole(user, new IdentityRole() { Name = model.RoleName });
+                var result = await userManager.RemoveFromRoleAsync(user, model.RoleName);
+                string error = CheckReponse(result);
+                if (!string.IsNullOrEmpty(error))
+                    return new GeneralResponse()
+                    {
+                        Flag = false,
+                        Message = error
+                    };
+                else
+                    return new GeneralResponse()
+                    {
+                        Flag = true,
+                        Message = $"The role {model.RoleName} has been removed from {user.FullName}."
+                    };
+            }
+            catch (Exception ex)
+            {
                 return new GeneralResponse()
                 {
-                    Flag = result.Flag,
-                    Message = result.Message
+                    Flag = false,
+                    Message = ex.Message
+                };
+            }
+        }
+
+        public async Task<GeneralResponse> DeleteUserAsync(string userName)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(userName))
+                    return new GeneralResponse()
+                    {
+                        Flag = false,
+                        Message = "Model state cannot be empty"
+                    };
+
+                var user = await FindUserByNameAsync(userName);
+                if (user == null)
+                    return new GeneralResponse()
+                    {
+                        Flag = false,
+                        Message = "User not found."
+                    };
+
+                var result = await userManager.DeleteAsync(user);
+
+                string error = CheckReponse(result);
+                if (!string.IsNullOrEmpty(error))
+                    return new GeneralResponse()
+                    {
+                        Flag = false,
+                        Message = error
+                    };
+                else
+                    return new GeneralResponse()
+                    {
+                        Flag = true,
+                        Message = $"{user.FullName} has ben deleted"
+                    };
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponse()
+                {
+                    Flag = false,
+                    Message = ex.Message
+                };
+            }
+        }
+
+        public async Task<GeneralResponse> DeleteUserRoleAsync(AssignUserRoleRequestDTO model)
+        {
+            try
+            {
+                if (model == null)
+                    return new GeneralResponse()
+                    {
+                        Flag = false,
+                        Message = "Model state cannot be empty"
+                    };
+
+                var user = await FindUserByNameAsync(model.UserName);
+                if (user == null)
+                    return new GeneralResponse()
+                    {
+                        Flag = false,
+                        Message = "User not found."
+                    };
+
+                var result = await userManager.RemoveFromRoleAsync(user, model.RoleName);
+                return new GeneralResponse()
+                {
+                    Flag = result.Succeeded,
                 };
             }
             catch (Exception ex)

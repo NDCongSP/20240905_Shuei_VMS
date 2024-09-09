@@ -6,13 +6,14 @@ namespace Application.DTOs.Request.Account
     public class CreateAccountRequestDTO : LoginRequestDTO
     {
         [Required]
-        public string Name { get; set; }=string.Empty;
-        [Required]public string Email { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        [Required] public string Email { get; set; }
+        [Required] public string FullName { get; set; } = string.Empty;
 
         [Required, Compare(nameof(Password))]
         public string ConfirmPassword { get; set; } = string.Empty;
-        
+
         [Required]
-        public string Role { get; set; } = string.Empty;
+        public List<CreateRoleRequestDTO> Roles { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using Domain.Entity.Authentication;
 using Infrastructure.Data;
 using Infrastructure.Repos;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Infrastructure.IoC.DependencyInjection
@@ -35,6 +37,9 @@ namespace Infrastructure.IoC.DependencyInjection
                 option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(option =>
             {
+                var keyr = config["Jwt:Key"];
+
+                // option.RequireHttpsMetadata = false;
                 option.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = false,
@@ -45,17 +50,46 @@ namespace Infrastructure.IoC.DependencyInjection
                     ValidAudience = config["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!))
                 };
+
+                //option.TokenValidationParameters = new TokenValidationParameters()
+                //{
+                //    ClockSkew = new System.TimeSpan(0, 0, 5)
+                //};
+
+                option.Events = new JwtBearerEvents()
+                {
+                    OnChallenge = context =>
+                    {
+                        context.HandleResponse();
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        context.Response.ContentType = "application/json";
+
+                        // Ensure we always have an error and error description.
+                        if (string.IsNullOrEmpty(context.Error))
+                            context.Error = "invalid_token";
+
+                        if (string.IsNullOrEmpty(context.ErrorDescription))
+                            context.ErrorDescription = "This request requires a valid JWT access token to be provided";
+
+                        // Add some extra context for expired tokens.
+                        if (context.AuthenticateFailure != null && context.AuthenticateFailure.GetType() == typeof(SecurityTokenExpiredException))
+                        {
+                            var authenticationException = context.AuthenticateFailure as SecurityTokenExpiredException;
+                            context.Response.Headers.Add("x-token-expired", authenticationException.Expires.ToString("o"));
+                            context.ErrorDescription = $"The token expired on {authenticationException.Expires.ToString("o")}";
+                        }
+
+                        return context.Response.WriteAsync(JsonSerializer.Serialize(new
+                        {
+                            error = context.Error,
+                            error_description = context.ErrorDescription
+                        }));
+                    }
+                };
+
             });
             services.AddAuthentication();
             services.AddAuthorization();
-
-            //services.AddCors(option =>
-            //    option.AddDefaultPolicy(
-            //        builder => builder//.WithOrigins("http://*:5001/")
-            //            .AllowAnyHeader()
-            //            .AllowAnyMethod()
-            //            .AllowAnyOrigin()
-            //            .WithExposedHeaders("Content-Disposition")));
 
             services.AddCors(option =>
             {
@@ -65,7 +99,7 @@ namespace Infrastructure.IoC.DependencyInjection
                                 .AllowAnyOrigin()
                                 .AllowAnyMethod()
                                 .AllowAnyHeader()
-                                // .WithExposedHeaders("Content-Disposition")
+                    // .WithExposedHeaders("Content-Disposition")
                     );
             });
 

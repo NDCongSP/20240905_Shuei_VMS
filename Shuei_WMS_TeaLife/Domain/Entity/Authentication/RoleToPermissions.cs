@@ -12,6 +12,7 @@ namespace Domain.Entity.Authentication
     public class RoleToPermissions
     {
         [Key] public Guid Id { get; set; }
+        public Guid IdRole { get; set; }
         public Guid IdPermission { get; set; }
         public string PermisionName { get; set; }
     }

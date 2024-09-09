@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using Application.Extentions
+@inherits LayoutComponentBase
 <RadzenComponents />
 
 <RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body' 'rz-sidebar rz-footer' position: relative">
@@ -16,18 +17,22 @@
             </RadzenColumn>
             <RadzenColumn Size="7">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
-                    <RadzenLabel>User@gmail.com</RadzenLabel>
-                    <RadzenAppearanceToggle />
-                    <RadzenProfileMenu>
-                        <Template>
-                            <RadzenIcon Icon="account_circle" />
-                        </Template>
-                        <ChildContent>
-                            <RadzenProfileMenuItem Visible="true" Text="User info" Path="/dialogcardpageuserinfo" Icon="manage_accounts"></RadzenProfileMenuItem>
-                            <RadzenProfileMenuItem Visible="true" Text="Users manager" Path="/usersmanager" Icon="people_alt"></RadzenProfileMenuItem>
-                            <RadzenProfileMenuItem Text="Logout" Path="/login" Icon="logout"></RadzenProfileMenuItem>
-                        </ChildContent>
-                    </RadzenProfileMenu>
+                    <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+                        <Authorized>
+                            <RadzenLabel>@context.User?.Identity?.Name</RadzenLabel>
+                            <RadzenAppearanceToggle />
+                            <RadzenProfileMenu>
+                                <Template>
+                                    <RadzenIcon Icon="account_circle" />
+                                </Template>
+                                <ChildContent>
+                                    <RadzenProfileMenuItem Visible="true" Text="User info" Path="/dialogcardpageuserinfo" Icon="manage_accounts"></RadzenProfileMenuItem>
+                                    <RadzenProfileMenuItem Visible="@context.User.IsInRole(ConstantExtention.Roles.SupperAdmin)" Text="Users manager" Path="/usersmanager" Icon="people_alt"></RadzenProfileMenuItem>
+                                    <RadzenProfileMenuItem Text="Logout" Path="/login" Icon="logout"></RadzenProfileMenuItem>
+                                </ChildContent>
+                            </RadzenProfileMenu>
+                        </Authorized>
+                    </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                 </RadzenStack>
             </RadzenColumn>
         </RadzenRow>
@@ -46,8 +51,10 @@
 
             }
         </RadzenBreadCrumb>
-        <div class="rz-p-4">
-            @Body
+        <div class=" rz-p-0 rz-p-md-12">
+            <RadzenPanel class="rz-p-4 rz-border-radius-2 rz-mx-4">
+                @Body
+            </RadzenPanel>
         </div>
     </RadzenBody>
     <RadzenFooter>

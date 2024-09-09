@@ -43,20 +43,22 @@ namespace Application.Services.Authen.UI
             }
 
             // Generate claimsIdentity from cached token
-            var claimsIdentity = new ClaimsIdentity(ParseClaimsFromJwt(cachedToken), "jwt");
+            var claimsIdentity = new ClaimsIdentity(JwtHelper.GetClaimsFromJwt(cachedToken), "jwt");
 
             var claimPrincipal = new ClaimsPrincipal(claimsIdentity);
 
             return new AuthenticationState(claimPrincipal);
         }
 
-        public void MarkUserAsAuthenticated(string userName)
+        public void MarkUserAsAuthenticated()
         {
-            var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(
-                    new[] { new Claim(ClaimTypes.Name, userName) }
-                    , ConstantExtention.StorageConst.AuthToken
-                    ));
-            var authState = Task.FromResult(new AuthenticationState(authenticatedUser));
+            //var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(
+            //        new[] { new Claim(ClaimTypes.Name, userName) }
+            //        , ConstantExtention.StorageConst.AuthToken
+            //        ));
+            //var authState = Task.FromResult(new AuthenticationState(authenticatedUser));
+
+            var authState = GetAuthenticationStateAsync();
             NotifyAuthenticationStateChanged(authState);
         }
 
@@ -100,23 +102,24 @@ namespace Application.Services.Authen.UI
 
 
                 // Check if token needs to be refreshed (when its expiration time is less than 1 minute away)
-                var expTime = GetExpiration(authState.User);
-                var diff = expTime - DateTime.UtcNow;
-                if (diff.TotalMinutes <= 10)
-                {
-                    //string refreshToken = await GetCachedRefreshTokenAsync();
-                    //(bool succeeded, var response) = await TryRefreshTokenAsync(new RefreshTokenRequest { Token = token, RefreshToken = refreshToken });
-                    //if (!succeeded)
-                    //{
-                    //    return new AccessTokenResult(AccessTokenResultStatus.RequiresRedirect, null, _authSettings.Value.LoginUrl);
-                    //}
+                //var expTime = GetExpiration(authState.User);
 
-                    //token = response?.Token;
-                }
-                else if (diff.TotalMinutes < 0)
-                {
-                    return new AccessTokenResult(AccessTokenResultStatus.RequiresRedirect, new AccessToken() { Value = null }, "/login");
-                }
+                //var diff = expTime - DateTime.UtcNow;
+                //if (diff.TotalSeconds <= 5)
+                //{
+                //    //string refreshToken = await GetCachedRefreshTokenAsync();
+                //    //(bool succeeded, var response) = await TryRefreshTokenAsync(new RefreshTokenRequest { Token = token, RefreshToken = refreshToken });
+                //    //if (!succeeded)
+                //    //{
+                //    //    return new AccessTokenResult(AccessTokenResultStatus.RequiresRedirect, null, _authSettings.Value.LoginUrl);
+                //    //}
+
+                //    //token = response?.Token;
+                //}
+                //else if (diff.TotalSeconds < 0)
+                //{
+                //    return new AccessTokenResult(AccessTokenResultStatus.RequiresRedirect, new AccessToken() { Value = null }, "/login");
+                //}
 
                 return new AccessTokenResult(AccessTokenResultStatus.Success, new AccessToken() { Value = token }, string.Empty);
             }
@@ -139,48 +142,6 @@ namespace Application.Services.Authen.UI
 
         private async ValueTask<ICollection<string>> GetCachedPermissionsAsync() =>
           await _localStorage.GetItemAsync<ICollection<string>>(ConstantExtention.StorageConst.Permission);
-
-
-        private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
-        {
-            var claims = new List<Claim>();
-            string payload = jwt.Split('.')[1];
-            byte[] jsonBytes = ParseBase64WithoutPadding(payload);
-            var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
-            if (keyValuePairs is not null)
-            {
-                foreach (var kvp in keyValuePairs)
-                {
-                    Console.WriteLine(kvp.Key);
-                    Console.WriteLine(kvp.Value.ToString() ?? string.Empty);
-                    Console.WriteLine(kvp.Value.GetType());
-
-                    if (kvp.Value is JsonElement elm)
-                    {
-                        if (elm.ValueKind == JsonValueKind.Array)
-                        {
-                            var enume = elm.EnumerateArray();
-                            while (enume.MoveNext())
-                            {
-                                claims.Add(new Claim(kvp.Key, enume.Current.ToString()));
-                            }
-                        }
-                        else
-                        {
-                            claims.Add(new Claim(kvp.Key, kvp.Value.ToString() ?? string.Empty));
-                        }
-                    }
-                }
-            }
-            return claims;
-        }
-
-        private byte[] ParseBase64WithoutPadding(string payload)
-        {
-            payload = payload.Trim().Replace('-', '+').Replace('_', '/');
-            string base64 = payload.PadRight(payload.Length + ((4 - (payload.Length % 4)) % 4), '=');
-            return Convert.FromBase64String(base64);
-        }
 
         public static DateTimeOffset GetExpiration(ClaimsPrincipal principal)
         {

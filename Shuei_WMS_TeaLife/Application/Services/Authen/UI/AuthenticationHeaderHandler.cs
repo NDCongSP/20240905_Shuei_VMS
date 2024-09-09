@@ -47,7 +47,14 @@ namespace Application.Services.Authen.UI
             {
                 Console.WriteLine(ex.ToString());
             }
-            return await base.SendAsync(request, cancellationToken);
+            var response = await base.SendAsync(request, cancellationToken);
+
+            //if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            //{
+            //    _navigation.NavigateTo("/login");
+            //}
+
+            return response;
         }
     }
 }

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using static Application.Extentions.ConstantExtention;
@@ -30,44 +31,148 @@ namespace Application.Services.Authen.UI
             _authStateProvider = authStateProvider;
         }
 
-        public Task<GeneralResponse> AssignUserRoleAsync(AssignUserRoleRequestDTO model)
+        public async Task<GeneralResponse> AssignUserRoleAsync(AssignUserRoleRequestDTO model)
         {
-            throw new NotImplementedException();
+            var result = await _httpClient.PostAsJsonAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.AssignUserRole}", model);
+
+            if (!result.IsSuccessStatusCode)
+                return new GeneralResponse()
+                {
+                    Flag = false,
+                    Message = result.StatusCode.ToString()
+                };
+
+            var content = await result.Content.ReadAsStringAsync();
+            var response = JsonConvert.DeserializeObject<GeneralResponse>(content);
+
+            return response;
         }
 
-        public Task<GeneralResponse> ChangePassAsync(ChangePassRequestDTO model)
+        public async Task<GeneralResponse> ChangePassAsync(ChangePassRequestDTO model)
         {
-            throw new NotImplementedException();
+            var result = await _httpClient.PostAsJsonAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.ChangePassword}", model);
+
+            if (!result.IsSuccessStatusCode)
+                return new GeneralResponse()
+                {
+                    Flag = false,
+                    Message = result.StatusCode.ToString()
+                };
+
+            var content = await result.Content.ReadAsStringAsync();
+            var response = JsonConvert.DeserializeObject<GeneralResponse>(content);
+
+            return response!;
         }
 
-        public Task<GeneralResponse> ChangeUserRoleAsync(AssignUserRoleRequestDTO model)
+        public async Task<GeneralResponse> ChangeUserRoleAsync(AssignUserRoleRequestDTO model)
         {
-            throw new NotImplementedException();
+            var result = await _httpClient.PostAsJsonAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.ChangeUserRole}", model);
+
+            if (!result.IsSuccessStatusCode)
+                return new GeneralResponse()
+                {
+                    Flag = false,
+                    Message = result.StatusCode.ToString()
+                };
+
+            var content = await result.Content.ReadAsStringAsync();
+            var response = JsonConvert.DeserializeObject<GeneralResponse>(content);
+
+            return response;
         }
 
-        public Task<GeneralResponse> CreateAccountAsync(CreateAccountRequestDTO model)
+        public async Task<GeneralResponse> CreateAccountAsync(CreateAccountRequestDTO model)
         {
-            throw new NotImplementedException();
+            var result = await _httpClient.PostAsJsonAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.CreateAccount}", model);
+
+            if (!result.IsSuccessStatusCode)
+                return new GeneralResponse()
+                {
+                    Flag = false,
+                    Message = result.StatusCode.ToString()
+                };
+
+            var content = await result.Content.ReadAsStringAsync();
+            var response = JsonConvert.DeserializeObject<GeneralResponse>(content);
+
+            return response;
         }
 
-        public Task CreateAdmin()
+        public async Task<GeneralResponse> CreateSuperAdminAsync()
         {
-            throw new NotImplementedException();
+            var result = await _httpClient.PostAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.CreateSuperAdminAccount}",null);
+
+            if (!result.IsSuccessStatusCode)
+                return new GeneralResponse()
+                {
+                    Flag = false,
+                    Message = result.StatusCode.ToString()
+                };
+
+            var content = await result.Content.ReadAsStringAsync();
+            var response = JsonConvert.DeserializeObject<GeneralResponse>(content);
+
+            return response;
         }
 
-        public Task<GeneralResponse> CreateRoleAsysnc(CreateRoleRequestDTO model)
+        public async Task<GeneralResponse> CreateRoleAsysnc(CreateRoleRequestDTO model)
         {
-            throw new NotImplementedException();
+            var result = await _httpClient.PostAsJsonAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.CreateRole}", model);
+
+            if (!result.IsSuccessStatusCode)
+                return new GeneralResponse()
+                {
+                    Flag = false,
+                    Message = result.StatusCode.ToString()
+                };
+
+            var content = await result.Content.ReadAsStringAsync();
+            var response = JsonConvert.DeserializeObject<GeneralResponse>(content);
+
+            return response;
         }
 
-        public Task<IEnumerable<GetRoleResponseDTO>> GetRolesAsync()
+        public async Task<GeneralResponse> DeleteUserAsync(string userName)
         {
-            throw new NotImplementedException();
+            var result = await _httpClient.PostAsJsonAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.Login}", userName);
+
+            if (!result.IsSuccessStatusCode)
+                return new GeneralResponse()
+                {
+                    Flag = false,
+                    Message = result.StatusCode.ToString()
+                };
+
+            var content = await result.Content.ReadAsStringAsync();
+            var response = JsonConvert.DeserializeObject<GeneralResponse>(content);
+
+            return response;
         }
 
-        public Task<IEnumerable<GetUserWithRoleResponseDTO>> GetUsersWithRolesAsync()
+        public async Task<List<GetRoleResponseDTO>> GetRolesAsync()
         {
-            throw new NotImplementedException();
+            var result = await _httpClient.GetAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.RoleList}");
+
+            if (!result.IsSuccessStatusCode)
+                return new List<GetRoleResponseDTO>();
+
+            var content = await result.Content.ReadAsStringAsync();
+            var response = JsonConvert.DeserializeObject<List<GetRoleResponseDTO>>(content);
+
+            return response;
+        }
+
+        public async Task<List<GetUserWithRoleResponseDTO>> GetUsersWithRolesAsync()
+        {
+            var result = await _httpClient.GetAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.UserWithRole}");
+
+            if (!result.IsSuccessStatusCode)
+                return new List<GetUserWithRoleResponseDTO>();
+
+            var content = await result.Content.ReadAsStringAsync();
+            var response = JsonConvert.DeserializeObject<List<GetUserWithRoleResponseDTO>>(content);
+            return response;
         }
 
         public async Task<LoginResponse> LoginAccountAsync(LoginRequestDTO model)
@@ -86,7 +191,7 @@ namespace Application.Services.Authen.UI
 
             //Set local storage
             await _authStateProvider.CacheAuthTokensAsync(loginResponse.Token, loginResponse.RefreshToken, string.Empty);
-            ((ApiAuthenticationStateProvider)_authStateProvider).MarkUserAsAuthenticated(model.UserName);
+            ((ApiAuthenticationStateProvider)_authStateProvider).MarkUserAsAuthenticated();
             //Gán token này mặc đinh vào header của tất cả các request của httpClient có tên là Bearer
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginResponse.Token);
 

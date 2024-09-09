@@ -1,0 +1,57 @@
+﻿ @page "/createduser"
+@using Application.DTOs.Request.Account
+@using Application.DTOs.Response.Account
+
+<RadzenTemplateForm Data="@_model" Submit="@((CreateAccountRequestDTO args) => { Submit(args); })">
+    <RadzenRow Gap="2rem" Class="rz-p-0 rz-p-lg-4">
+        <RadzenColumn SizeXS="12" SizeMD="12">
+            <RadzenStack>
+                <RadzenFieldset Text="User info">
+                    <RadzenStack Gap="1rem">
+                        <RadzenRow AlignItems="AlignItems.Center">
+                            <RadzenColumn SizeXS="12" SizeSM="12">
+                                <RadzenText TextStyle="TextStyle.Caption" class="rz-display-flex rz-mt-0 rz-mb-0">User name</RadzenText>
+                                <RadzenTextBox Name="_txtUserName" TextStyle="TextStyle.Body1" Style="display: block;width: 100%;" @bind-Value=@_model.UserName />
+                                <RadzenRequiredValidator Component="_txtUserName" Text="User name" Popup="false" Style="position: absolute" />
+                            </RadzenColumn>
+                            <RadzenColumn SizeXS="12" SizeSM="12">
+                                <RadzenText TextStyle="TextStyle.Caption" class="rz-display-flex rz-mt-0 rz-mb-0">Full name</RadzenText>
+                                <RadzenTextBox Name="_txtFullName" TextStyle="TextStyle.Body1" Style="display: block;width: 100%;" @bind-Value=@_model.FullName />
+                                <RadzenRequiredValidator Component="_txtFullName" Text="Full name" Popup="false" Style="position: absolute" />
+                            </RadzenColumn>
+                            <RadzenColumn SizeXS="12" SizeSM="12">
+                                <RadzenText TextStyle="TextStyle.Caption" class="rz-display-flex rz-mt-0 rz-mb-0">Email</RadzenText>
+                                <RadzenTextBox Name="_txtEmail" TextStyle="TextStyle.Body1" Style="display: block;width: 100%;" @bind-Value=@_model.Email />
+                                <RadzenRequiredValidator Component="_txtEmail" Text="Full name" Popup="false" Style="position: absolute" />
+                            </RadzenColumn>
+                            <RadzenColumn SizeXS="12" SizeMD="12">
+                                <RadzenText TextStyle="TextStyle.Caption" class="rz-display-flex rz-mt-0 rz-mb-0">Password</RadzenText>
+                                <RadzenPassword Name="_password" @bind-Value=@_model.Password Placeholder=">= 6 ký tự" aria-label="enter password"
+                                                Style="display: block;width:100%" />
+                                <RadzenRequiredValidator Component="_password" Text="Password" Popup="false" Style="position: absolute" />
+                            </RadzenColumn>
+                            <RadzenColumn SizeXS="12" SizeMD="12">
+                                <RadzenText TextStyle="TextStyle.Caption" class="rz-display-flex rz-mt-0 rz-mb-0">Confirm password</RadzenText>
+                                <RadzenPassword Name="_repeatPassword" @bind-Value=@_model.ConfirmPassword Placeholder="Confirm password" aria-label="enter password"
+                                                Style="display: block;width:100%" />
+                                <RadzenRequiredValidator Component="_repeatPassword" Text="Confirm password" Popup="false" Style="position: absolute" />
+                                <RadzenCompareValidator Visible=@(!string.IsNullOrEmpty(_model.ConfirmPassword)) Value=@_model.ConfirmPassword
+                                                        Component="_repeatPassword" Text="Mật khẩu không khớp" Popup="false" Style="position: absolute" />
+                            </RadzenColumn>
+                            <RadzenColumn SizeXS="12" SizeSM="12">
+                                <RadzenText TextStyle="TextStyle.Caption" class="rz-display-flex rz-mt-0 rz-mb-0">Roles</RadzenText>
+                                <RadzenDropDown @bind-Value=@_model Data=@_roles TextProperty="@nameof(GetRoleResponseDTO.Name)" ValueProperty="@nameof(GetRoleResponseDTO.Id)" Name="DropDownMultipleChips"
+                                                Multiple=true AllowClear=true Placeholder="Select products" Chips=true Style="width: 100%; max-width: 400px;" />
+                                <RadzenRequiredValidator Component="_dropDownRoles" Text="Select roles" Popup="false" Style="position: absolute" />
+                            </RadzenColumn>
+                        </RadzenRow>
+                    </RadzenStack>
+                </RadzenFieldset>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" Class="rz-mt-8 rz-mb-4">
+        <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Lưu" />
+        @* <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Cancel" Click="@Cancel" /> *@
+    </RadzenStack>
+</RadzenTemplateForm>

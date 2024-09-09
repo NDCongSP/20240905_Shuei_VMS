@@ -4,7 +4,7 @@ namespace Domain.Entity.Authentication
 {
     public class ApplicationUser : IdentityUser
     {
-        public string? Name { get; set; }
+        public string? FullName { get; set; }
         public string? AppName { get; set; }
     }
 }

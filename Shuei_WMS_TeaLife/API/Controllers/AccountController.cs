@@ -38,7 +38,7 @@ namespace API.Controllers
             return Ok(await account.RefreshTokenAsync(model));
         }
 
-        [HttpPost(ApiRoutes.Identity.RoleCreate)]
+        [HttpPost(ApiRoutes.Identity.CreateRole)]
         public async Task<ActionResult<GeneralResponse>> CreateRoleAsync(CreateRoleRequestDTO model)
         {
             if (!ModelState.IsValid) return BadRequest("Model cannot be null");
@@ -52,15 +52,15 @@ namespace API.Controllers
             return Ok(await account.GetRolesAsync());
         }
 
-        [HttpPost(ApiRoutes.Identity.CreateAdminAccount)]
-        public async Task<ActionResult> CreateAdminAsync()
+        [AllowAnonymous]
+        [HttpPost(ApiRoutes.Identity.CreateSuperAdminAccount)]
+        public async Task<ActionResult<GeneralResponse>> CreateSupperAdminAsync()
         {
-            await account.CreateAdmin();
-            return Ok();
+            return Ok(await account.CreateSuperAdminAsync());
         }
 
         [HttpGet(ApiRoutes.Identity.UserWithRole)]
-        public async Task<ActionResult<IEnumerable<GeneralResponse>>> GetUserWithRoleAsync()
+        public async Task<ActionResult<List<GeneralResponse>>> GetUserWithRoleAsync()
         {
             return Ok(await account.GetUsersWithRolesAsync());
         }
@@ -73,7 +73,7 @@ namespace API.Controllers
             return Ok(await account.ChangePassAsync(model));
         }
 
-        [HttpPost(ApiRoutes.Identity.ChangrRole)]
+        [HttpPost(ApiRoutes.Identity.ChangeUserRole)]
         public async Task<ActionResult<GeneralResponse>> ChangeRoleAsync(AssignUserRoleRequestDTO model)
         {
             if (!ModelState.IsValid) return BadRequest("Model cannot be null");
@@ -87,6 +87,22 @@ namespace API.Controllers
             if (!ModelState.IsValid) return BadRequest("Model cannot be null");
 
             return Ok(await account.AssignUserRoleAsync(model));
+        }
+
+        [HttpPost(ApiRoutes.Identity.DeleteUser)]
+        public async Task<ActionResult<GeneralResponse>> DeleteAccountAsync(string userName)
+        {
+            if (!ModelState.IsValid) return BadRequest("Model cannot be null");
+
+            return Ok(await account.DeleteUserAsync(userName));
+        }
+
+        [HttpPost(ApiRoutes.Identity.DeleteUserRole)]
+        public async Task<ActionResult<GeneralResponse>> DeleteUserAsync(AssignUserRoleRequestDTO model)
+        {
+            if (!ModelState.IsValid) return BadRequest("Model cannot be null");
+
+            return Ok(await account.DeleteUserRoleAsync(model));
         }
     }
 }
