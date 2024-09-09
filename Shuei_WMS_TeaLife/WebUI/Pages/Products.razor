@@ -10,7 +10,7 @@
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start"
                              AlignItems="AlignItems.Center" Gap="1rem" Wrap="FlexWrap.Wrap" class="rz-mt-2">
                     <RadzenButton Click=@(args => AddNewItemAsync()) Variant="Variant.Flat" Shade="Shade.Dark"
-                                  Text="Thêm profile" Icon="add_circle" ButtonStyle="ButtonStyle.Success" />
+                                  Text="Add new product" Icon="add_circle" ButtonStyle="ButtonStyle.Success" />
                 </RadzenStack>
                 <RadzenDataGrid @ref="_profileGrid" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="10" AllowSorting="true"
                                 Data="@_products" TItem="Product" AllowColumnPicking="true" AllowColumnResize="true" AllowGrouping="true"

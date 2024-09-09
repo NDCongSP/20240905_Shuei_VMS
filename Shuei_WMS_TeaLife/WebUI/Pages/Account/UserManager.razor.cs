@@ -83,6 +83,8 @@ namespace WebUI.Pages.Account
             }
         }
 
+        async Task EditItemAsync(string userName) { }
+
         async void AddNewItemAsync()
         {
             var res = await _dialogService.OpenAsync<DialogCardPageAddNewUser>($"Tạo tài khoản",
