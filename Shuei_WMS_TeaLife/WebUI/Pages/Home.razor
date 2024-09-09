@@ -1,0 +1,14 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<RadzenPanel class="rz-border-radius-6 rz-p-12 rz-mx-auto" AllowCollapse="true">
+    <HeaderTemplate>
+        <RadzenText TextStyle="TextStyle.H6" class="rz-display-flex rz-align-items-center rz-m-0">
+            <RadzenIcon Icon="account_box" class="rz-me-1" /><b>Orders</b>
+        </RadzenText>
+    </HeaderTemplate>
+    <ChildContent>
+        <RadzenText TextStyle="TextStyle.DisplayH1">SHUEI INFO TECH.</RadzenText>
+    </ChildContent>
+</RadzenPanel>

@@ -1,0 +1,30 @@
+﻿<RadzenPanelMenu ShowArrow="true">
+    @* <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-p-4" Style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border);">
+    <RadzenImage Path="images/logoAldila.ico" style="width: 48px; height: 48px;"></RadzenImage>
+    </RadzenStack> *@
+    <RadzenPanelMenuItem Text="Product" Icon="dashboard" Path="/product" />
+
+    <RadzenPanelMenuItem Text="Vendor" Icon="label_important" Path="/" />
+
+    <RadzenPanelMenuItem Text="Localtion" Icon="label_important" Path="/" />
+
+    <RadzenPanelMenuItem Text="HT" Icon="label_important" Path="/login" />
+
+    <RadzenPanelMenuItem Text="Orders" Icon="description">
+        <ChildContent>
+            <RadzenPanelMenuItem Text="List Orders" Icon="label_important" />
+            <RadzenPanelMenuItem Text="Stock In" Icon="label_important" />
+            <RadzenPanelMenuItem Text="Stock Out" Icon="label_important" />
+            <RadzenPanelMenuItem Text="Transfer" Icon="label_important" />
+            <RadzenPanelMenuItem Text="Inventory" Icon="label_important" />
+        </ChildContent>
+    </RadzenPanelMenuItem>
+
+    <RadzenPanelMenuItem Text="Settings" Icon="settings" Path="/counter">
+        <ChildContent>
+            <RadzenPanelMenuItem Text="Units" Icon="label_important" />
+            <RadzenPanelMenuItem Text="Categorys" Icon="label_important" />
+            <RadzenPanelMenuItem Text="Voucher Type" Icon="label_important" />
+        </ChildContent>
+    </RadzenPanelMenuItem>
+</RadzenPanelMenu>

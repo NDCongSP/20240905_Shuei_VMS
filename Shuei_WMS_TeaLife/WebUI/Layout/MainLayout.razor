@@ -1,0 +1,58 @@
+﻿@inherits LayoutComponentBase
+<RadzenComponents />
+
+<RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body' 'rz-sidebar rz-footer' position: relative">
+    <RadzenHeader>
+        <RadzenRow>
+            <RadzenColumn Size="5">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+                    <RadzenSidebarToggle Click="@(() => _sidebarExpanded = !_sidebarExpanded)" />
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Wrap="FlexWrap.Wrap" Gap="10px">
+                        <RadzenImage Path="images/tealife.png" style="width: 40px; height: 40px;"></RadzenImage>
+                        <RadzenTabs />
+                        <RadzenLabel Text="VMS" />
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn Size="7">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+                    <RadzenLabel>User@gmail.com</RadzenLabel>
+                    <RadzenAppearanceToggle />
+                    <RadzenProfileMenu>
+                        <Template>
+                            <RadzenIcon Icon="account_circle" />
+                        </Template>
+                        <ChildContent>
+                            <RadzenProfileMenuItem Visible="true" Text="User info" Path="/dialogcardpageuserinfo" Icon="manage_accounts"></RadzenProfileMenuItem>
+                            <RadzenProfileMenuItem Visible="true" Text="Users manager" Path="/usersmanager" Icon="people_alt"></RadzenProfileMenuItem>
+                            <RadzenProfileMenuItem Text="Logout" Path="/login" Icon="logout"></RadzenProfileMenuItem>
+                        </ChildContent>
+                    </RadzenProfileMenu>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenHeader>
+    <RadzenSidebar Responsive="true" @bind-Expanded="@_sidebarExpanded">
+        <NavMenu />
+    </RadzenSidebar>
+    <RadzenBody>
+        <RadzenBreadCrumb>
+            @if (GlobalVariable.BreadCrumbData != null && GlobalVariable.BreadCrumbData.Count > 0)
+            {
+                @foreach (var item in GlobalVariable.BreadCrumbData)
+                {
+                    <RadzenBreadCrumbItem Path="@item.Path" Text="@item.Text" />
+                }
+
+            }
+        </RadzenBreadCrumb>
+        <div class="rz-p-4">
+            @Body
+        </div>
+    </RadzenBody>
+    <RadzenFooter>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+            <RadzenLabel>© 2024 SHUEI. All Rights Reserved.</RadzenLabel>
+        </RadzenStack>
+    </RadzenFooter>
+</RadzenLayout>

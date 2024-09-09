@@ -1,0 +1,30 @@
+﻿@page "/product"
+@using Domain.Entity.Products
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<RadzenPanel class="rz-p-4 rz-border-radius-2 rz-mx-4">
+    <RadzenDataGrid @ref="_profileGrid" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="10" AllowSorting="true"
+                    Data="@_products" TItem="Product" AllowColumnPicking="true" AllowColumnResize="true" AllowGrouping="true" 
+                    GridLines="Radzen.DataGridGridLines.Both" AllowAlternatingRows="false"
+                    ShowPagingSummary=@_showPagerSummary PagingSummaryFormat="@_pagingSummaryFormat" PageSizeOptions="@_pageSizeOptions">
+       @*  <RadzenDataGrid @ref="ordersGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="5" AllowSorting="true" EditMode="@editMode"
+                        Data="@orders" TItem="Order" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" Sort="@Reset" Page="@Reset" Filter="@Reset" ColumnWidth="200px"> *@
+        <HeaderTemplate>
+            <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle" Text="Add New Product"/>
+        </HeaderTemplate>
+        <Columns>
+            @* <RadzenDataGridColumn TItem="Product" Property="Id" Title="Id" /> *@
+            <RadzenDataGridColumn TItem="Product" Width="200px" Property="Name" Title="Product Name 2" />
+            <RadzenDataGridColumn TItem="Product" Width="200px" Property="CategoryName" Title="Category Name" />
+            <RadzenDataGridColumn TItem="Product" Width="200px" Property="UnitName" Title="Unit Name" />
+            <RadzenDataGridColumn TItem="Product" Width="200px" Property="CreatedDate" Title="Created Date" />
+            <RadzenDataGridColumn TItem="Product" Width="200px" Filterable="false" Sortable="true" TextAlign="TextAlign.Center" Frozen="true" FrozenPosition="FrozenColumnPosition.Right">
+                <Template Context="data">
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" @onclick:stopPropagation="true"/>
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" class="my-1 ms-1" @onclick:stopPropagation="true"/>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenPanel>
