@@ -135,7 +135,7 @@ namespace Application.Services.Authen.UI
 
         public async Task<GeneralResponse> DeleteUserAsync(string userName)
         {
-            var result = await _httpClient.PostAsJsonAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.Login}", userName);
+            var result = await _httpClient.PostAsJsonAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.DeleteUser}", userName);
 
             if (!result.IsSuccessStatusCode)
                 return new GeneralResponse()
