@@ -1,40 +1,29 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using System;
+﻿using Microsoft.AspNetCore.Components;
+using Radzen;
 
 namespace WebUI.Layout
 {
     public partial class NavMenu
     {
-		[Parameter]
-		public bool sidebarExpanded { get; set; } = true;
+        [Parameter]
+        public bool sidebarExpanded { get; set; } = true;
 
-		void OnParentClicked(MenuItemEventArgs args)
-		{
-			GlobalVariable.BreadCrumbData = null;
-			GlobalVariable.BreadCrumbData = new List<BreadCrumbModel>();
-			GlobalVariable.BreadCrumbData.Add(new BreadCrumbModel()
-			{
-				Text = args.Text,
-				Path = args.Path
-			});
-		}
+        void OnParentClick(MenuItemEventArgs args)
+        {
+            Console.WriteLine($"{args.Path}|{args.Text}");
 
-		void OnChildClicked(MenuItemEventArgs args)
-		{
-			GlobalVariable.BreadCrumbData = null;
-			GlobalVariable.BreadCrumbData = new List<BreadCrumbModel>();
+            //if (string.IsNullOrEmpty(args.Path))
+            {
+                GlobalVariable.BreadCrumbData = null;
+                GlobalVariable.BreadCrumbData = new BreadCumb();
+            }
 
-			GlobalVariable.BreadCrumbData.Add(new BreadCrumbModel()
-			{
-				Text = "Orders",
-			});
 
-			GlobalVariable.BreadCrumbData.Add(new BreadCrumbModel()
-			{
-				Text = args.Text,
-				Path = args.Path
-			});
-		}
-	}
+            GlobalVariable.BreadCrumbData.Add(new BreadCrumbModel()
+            {
+                Text = args.Text,
+                Path = args.Path
+            });
+        }
+    }
 }

@@ -22,6 +22,14 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 var config = builder.Configuration;
 
+#region BreadCumb initial
+//GlobalVariable.BreadCrumbDataMaster.Add(new BreadCrumbModel()
+//{
+//    Path = "User Manager",
+//    Text= "Users List|"
+//});
+#endregion
+
 builder.Services.AddRadzenComponents();
 
 builder.Services.AddBlazoredLocalStorage();

@@ -7,19 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Layout\NavMenu.razor.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <None Remove="Resources\logoTeaLife.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <EmbeddedResource Include="Resources\logoTeaLife.svg" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="Layout\NavMenu.razor.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

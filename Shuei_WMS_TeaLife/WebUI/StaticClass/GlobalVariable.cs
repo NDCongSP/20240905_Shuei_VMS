@@ -1,7 +1,10 @@
-﻿namespace WebUI
+﻿using WebUI;
+
+namespace WebUI
 {
     public static class GlobalVariable
     {
-        public static List<BreadCrumbModel> BreadCrumbData { get; set; } = new List<BreadCrumbModel>();
+        public static BreadCumb BreadCrumbData { get; set; } =new BreadCumb();
+        public static BreadCumb BreadCrumbDataMaster { get; set; } = new BreadCumb();
     }
 }
