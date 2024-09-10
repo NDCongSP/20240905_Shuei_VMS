@@ -209,5 +209,22 @@ namespace Application.Services.Authen.UI
         {
             throw new NotImplementedException();
         }
+
+        public async Task<GeneralResponse> UpdateRoleAsync(UpdateRoleNameRequestDTO model)
+        {
+            var result = await _httpClient.PostAsJsonAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.UpdateRole}", model);
+
+            if (!result.IsSuccessStatusCode)
+                return new GeneralResponse()
+                {
+                    Flag = false,
+                    Message = result.StatusCode.ToString()
+                };
+
+            var content = await result.Content.ReadAsStringAsync();
+            var response = JsonConvert.DeserializeObject<GeneralResponse>(content);
+
+            return response;
+        }
     }
 }

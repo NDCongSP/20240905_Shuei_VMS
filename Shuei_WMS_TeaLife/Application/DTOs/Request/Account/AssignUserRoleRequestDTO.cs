@@ -3,6 +3,6 @@
     public class AssignUserRoleRequestDTO
     {
         public string UserName { get; set; }
-        public string RoleName { get; set; }
+        public List<CreateRoleRequestDTO> Roles { get; set; }
     }
 }

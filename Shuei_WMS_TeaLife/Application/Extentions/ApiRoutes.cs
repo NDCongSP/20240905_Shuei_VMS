@@ -41,6 +41,7 @@ namespace Application.Extentions
             public const string AssignUserRole = "identity/assign_user_role";
             public const string DeleteUser = "identity/delete-user";
             public const string DeleteUserRole = "identity/delete-user-role";
+            public const string UpdateRole = "identity/update-role-name";
             //public const string GetFromToByName = "GetByName/{from}/{to}/{tenChuong}";
         }
 

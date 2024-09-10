@@ -104,5 +104,13 @@ namespace API.Controllers
 
             return Ok(await account.DeleteUserRoleAsync(model));
         }
+
+        [HttpPost(ApiRoutes.Identity.UpdateRole)]
+        public async Task<ActionResult<GeneralResponse>> UpdateRoleAsync(UpdateRoleNameRequestDTO model)
+        {
+            if (!ModelState.IsValid) return BadRequest("Model cannot be null");
+
+            return Ok(await account.UpdateRoleAsync(model));
+        }
     }
 }

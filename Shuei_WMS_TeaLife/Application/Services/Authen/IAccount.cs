@@ -22,5 +22,6 @@ namespace Application.Services.Authen
         Task<GeneralResponse> DeleteUserAsync(string userName);
 
         Task<GeneralResponse> DeleteUserRoleAsync(AssignUserRoleRequestDTO model);
+        Task<GeneralResponse> UpdateRoleAsync(UpdateRoleNameRequestDTO model);
     }
 }

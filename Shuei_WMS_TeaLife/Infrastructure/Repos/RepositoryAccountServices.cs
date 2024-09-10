@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -149,7 +150,7 @@ namespace Infrastructure.Repos
                     Message = "User not found"
                 };
 
-            if (await FindRoleByNameAsync(model.RoleName) is null)
+            if (await FindRoleByNameAsync(model.Roles.FirstOrDefault().Name) is null)
                 return new GeneralResponse()
                 {
                     Flag = false,
@@ -167,7 +168,7 @@ namespace Infrastructure.Repos
                     Message = error
                 };
 
-            var result = await userManager.AddToRoleAsync(user, model.RoleName);
+            var result = await userManager.AddToRoleAsync(user, model.Roles.FirstOrDefault().Name);
             var response = CheckReponse(result);
             if (!string.IsNullOrEmpty(response))
                 return new GeneralResponse()
@@ -464,20 +465,14 @@ namespace Infrastructure.Repos
                         Message = "User not found."
                     };
 
-                var result = await userManager.RemoveFromRoleAsync(user, model.RoleName);
-                string error = CheckReponse(result);
-                if (!string.IsNullOrEmpty(error))
-                    return new GeneralResponse()
-                    {
-                        Flag = false,
-                        Message = error
-                    };
-                else
-                    return new GeneralResponse()
-                    {
-                        Flag = true,
-                        Message = $"The role {model.RoleName} has been removed from {user.FullName}."
-                    };
+
+
+                var res = await AssignUserToRole(user, model.Roles);
+                return new GeneralResponse()
+                {
+                    Flag = res.Flag,
+                    Message = res.Message
+                };
             }
             catch (Exception ex)
             {
@@ -493,12 +488,12 @@ namespace Infrastructure.Repos
         {
             try
             {
-                if (!string.IsNullOrEmpty(userName))
-                    return new GeneralResponse()
-                    {
-                        Flag = false,
-                        Message = "Model state cannot be empty"
-                    };
+                //if (!string.IsNullOrEmpty(userName))
+                //    return new GeneralResponse()
+                //    {
+                //        Flag = false,
+                //        Message = "Model state cannot be empty"
+                //    };
 
                 var user = await FindUserByNameAsync(userName);
                 if (user == null)
@@ -553,10 +548,16 @@ namespace Infrastructure.Repos
                         Message = "User not found."
                     };
 
-                var result = await userManager.RemoveFromRoleAsync(user, model.RoleName);
+
+                IdentityResult result = null;
+                foreach (var role in model.Roles)
+                {
+                    result = await userManager.RemoveFromRoleAsync(user, role.Name);
+                }
                 return new GeneralResponse()
                 {
                     Flag = result.Succeeded,
+                    Message = result.Errors.FirstOrDefault()?.Description
                 };
             }
             catch (Exception ex)
@@ -567,6 +568,50 @@ namespace Infrastructure.Repos
                     Message = ex.Message
                 };
             }
+        }
+
+        public async Task<GeneralResponse> UpdateRoleAsync(UpdateRoleNameRequestDTO model)
+        {
+            if (model == null)
+                return new GeneralResponse()
+                {
+                    Flag = false,
+                    Message = "Model state cannot be empty"
+                };
+
+            var currentRole = await FindRoleByNameAsync(model.CurrentRoleName);
+
+            if (currentRole == null)
+            {
+                return new GeneralResponse()
+                {
+                    Flag = false,
+                    Message = $"Role '{model.CurrentRoleName}' not found."
+                };
+            }
+
+            // Đổi tên vai trò
+            currentRole.Name = model.NewRoleName;
+
+            // Cập nhật vai trò
+            var result = await roleManager.UpdateAsync(currentRole);
+
+            var error = CheckReponse(result);
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                return new GeneralResponse()
+                {
+                    Flag = false,
+                    Message = error
+                };
+            }
+
+            return new GeneralResponse()
+            {
+                Flag = true,
+                Message = $"Role name has been changed from '{model.CurrentRoleName}' to '{model.NewRoleName}'."
+            };
         }
     }
 }

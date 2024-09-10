@@ -28,5 +28,6 @@ namespace Application.Services.Authen.UI
         //Task<string> TryRefreshTokenAsync(RefreshTokenRequestDTO model);
         Task LogoutAsync();
         Task<GeneralResponse> DeleteUserAsync(string userName);
+        Task<GeneralResponse> UpdateRoleAsync(UpdateRoleNameRequestDTO model);
     }
 }
