@@ -1,21 +1,16 @@
 ﻿using Application.DTOs.Request.Account;
+using Application.DTOs.Response.Account;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
 
 namespace WebUI.Pages.Components
 {
-    public partial class DialogCardPageAddNewUser
+    public partial class DialogCardPageAddNewUser1
     {
-        CreateAccountRequestDTO _model = new CreateAccountRequestDTO();
-
+        private CreateAccountRequestDTO _model = new CreateAccountRequestDTO();
         List<CreateRoleRequestDTO> _roles = new List<CreateRoleRequestDTO>();
-        IList<CreateRoleRequestDTO> _selectedRoles = [];
-
-        RadzenDataGrid<CreateRoleRequestDTO> _profileGrid;
-        IEnumerable<int> _pageSizeOptions = new int[] { 5, 10, 20, 50, 100 };
-        bool _showPagerSummary = true;
-        string _pagingSummaryFormat = "Displaying page {0} of {1} <b>(total {2} records)</b>";
+        private List<CreateRoleRequestDTO> _selectedRoles = []; 
 
         protected override async Task OnInitializedAsync()
         {
@@ -27,11 +22,10 @@ namespace WebUI.Pages.Components
             {
                 _roles.Add(new CreateRoleRequestDTO() { Name = role.Name, Id = role.Id });
             }
-
             StateHasChanged();
         }
 
-        async void Submit(CreateAccountRequestDTO arg)
+         async void Submit(CreateAccountRequestDTO arg)
         {
             var confirm = await _dialogService.Confirm($"Do you want to create a new account: {arg.UserName}?", "Create user", new ConfirmOptions()
             {
@@ -42,10 +36,7 @@ namespace WebUI.Pages.Components
 
             if (confirm == null || confirm == false) return;
 
-            foreach (var role in _selectedRoles)
-            {
-                arg.Roles.Add(role);
-            }
+            arg.Roles = _selectedRoles;
 
             var res = await _authenServices.CreateAccountAsync(arg);
             if (res.Flag)

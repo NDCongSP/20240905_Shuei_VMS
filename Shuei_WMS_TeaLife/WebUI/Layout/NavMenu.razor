@@ -1,13 +1,13 @@
-﻿<RadzenPanelMenu ShowArrow="true">
+﻿<RadzenPanelMenu ShowArrow="true" Click="@OnParametersSet">
     @* <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-p-4" Style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border);">
     <RadzenImage Path="images/logoAldila.ico" style="width: 48px; height: 48px;"></RadzenImage>
     </RadzenStack> *@
     <RadzenPanelMenuItem Text="User Manager" Icon="dashboard" >
         <ChildContent>
-            <RadzenPanelMenuItem Text="Users List" Icon="fiber_manual_record" Path="/usersmanager" />
-            <RadzenPanelMenuItem Text="Roles" Icon="fiber_manual_record" Path="/rolesmanager">
+            <RadzenPanelMenuItem Text="Users List" Icon="fiber_manual_record" Path="/" />
+            <RadzenPanelMenuItem Text="Roles" Icon="fiber_manual_record" Path="/createuser">
                 <ChildContent>
-                    <RadzenPanelMenuItem Text="List" Icon="label_important" />
+                    <RadzenPanelMenuItem Text="List" Icon="label_important" Path="" />
                     <RadzenPanelMenuItem Text="List Orders" Icon="label_important" />
                 </ChildContent>
             </RadzenPanelMenuItem>

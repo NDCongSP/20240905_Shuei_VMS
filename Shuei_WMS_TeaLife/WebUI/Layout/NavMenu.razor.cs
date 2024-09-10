@@ -19,6 +19,7 @@ namespace WebUI.Layout
 				Path = args.Path
 			});
 		}
+
 		void OnChildClicked(MenuItemEventArgs args)
 		{
 			GlobalVariable.BreadCrumbData = null;

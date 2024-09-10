@@ -25,10 +25,32 @@ namespace Infrastructure.IoC.DependencyInjection
         {
             services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(config.GetConnectionString("DefaultConnection")));
 
+            // For Identity
             services.AddIdentityCore<ApplicationUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager();
+            //services.AddIdentity<ApplicationUser, IdentityRole>(o =>
+            //{
+            //    o.Password.RequireDigit = false;
+            //    o.Password.RequireLowercase = false;
+            //    o.Password.RequireUppercase = false;
+            //    o.Password.RequireNonAlphanumeric = false;
+            //    o.Password.RequireUppercase = false;
+            //    o.Password.RequiredLength = 6;
+            //    o.Password.RequiredUniqueChars = 0;
+
+
+            //    o.Lockout.MaxFailedAccessAttempts = 5;
+
+            //    o.SignIn.RequireConfirmedAccount = false;
+            //    o.SignIn.RequireConfirmedEmail = false;
+            //    o.SignIn.RequireConfirmedPhoneNumber = false;
+
+            //})
+            //    .AddEntityFrameworkStores<ApplicationDbContext>()
+            //    .AddDefaultTokenProviders();
+
 
             services.AddAuthentication(option =>
             {

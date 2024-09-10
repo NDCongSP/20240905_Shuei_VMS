@@ -4,6 +4,7 @@ using System.Reflection;
 using Application.DTOs.Response.Account;
 using WebUI.Pages.Components;
 using Application.DTOs.Request.Account;
+using Microsoft.AspNetCore.Components;
 
 namespace WebUI.Pages.Account
 {
@@ -28,11 +29,11 @@ namespace WebUI.Pages.Account
             RefreshDataAsync();
         }
 
-        async Task DeleteItemAsync(string userName)
+        async Task DeleteItemAsync(UpdateDeleteRequest model)
         {
             try
             {
-                var confirm = await _dialogService.Confirm($"Bạn chắc chắn muốn xóa user: {userName}", "Xóa tài khoản", new ConfirmOptions()
+                var confirm = await _dialogService.Confirm($"Bạn chắc chắn muốn xóa user: {model.Name}", "Xóa tài khoản", new ConfirmOptions()
                 {
                     OkButtonText = "Yes",
                     CancelButtonText = "No",
@@ -41,7 +42,7 @@ namespace WebUI.Pages.Account
 
                 if (confirm == null || confirm == false) return;
 
-                var res = await _authenServices.DeleteUserAsync(userName);
+                var res = await _authenServices.DeleteUserAsync(model);
 
                 if (res.Flag)
                 {
@@ -85,11 +86,18 @@ namespace WebUI.Pages.Account
 
         async Task EditItemAsync(string userName) { }
 
-        async void AddNewItemAsync()
+        async Task AddNewItemAsync()
         {
-            var res = await _dialogService.OpenAsync<DialogCardPageAddNewUser>($"Tạo tài khoản",
+            var res = await _dialogService.OpenAsync<DialogCardPageAddNewUser>($"Create new user",
                     new Dictionary<string, object>() { },
-                    new DialogOptions() { Width = "500px", Height = "550px", Resizable = true, Draggable = true, CloseDialogOnOverlayClick = true });
+                    new DialogOptions()
+                    {
+                        Width = "1000px",
+                        Height = "800px",
+                        Resizable = true,
+                        Draggable = true,
+                        CloseDialogOnOverlayClick = true
+                    });
 
             if (res == "Success")
             {
@@ -115,10 +123,11 @@ namespace WebUI.Pages.Account
                 _users = null;
                 _users = new List<GetUserWithRoleResponseDTO>();
 
-                if (res != null) 
+                if (res != null)
                     _users.AddRange(res);
 
                 await _profileGrid.RefreshDataAsync();
+
                 StateHasChanged();
             }
             catch (Exception ex)

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using System.Security.Claims;
+using System;
+using Radzen.Blazor;
 
 namespace WebUI.Layout
 {
@@ -10,7 +12,7 @@ namespace WebUI.Layout
         bool _sidebarExpanded = false;
         protected override async Task OnInitializedAsync()
         {
-            
+
         }
 
         protected override void OnAfterRender(bool firstRender)
@@ -21,6 +23,12 @@ namespace WebUI.Layout
             }
 
             base.OnAfterRender(firstRender);
+        }
+
+        void OnParentClicked(RadzenProfileMenuItem args)
+        {
+            if (args.Text == "Logout")
+                _authenServices.LogoutAsync();
         }
 
         public void Dispose()

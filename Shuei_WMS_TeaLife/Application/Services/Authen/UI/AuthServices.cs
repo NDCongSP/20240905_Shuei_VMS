@@ -23,12 +23,14 @@ namespace Application.Services.Authen.UI
         readonly HttpClient _httpClient;
         readonly ILocalStorageService _localStorage;
         readonly ApiAuthenticationStateProvider _authStateProvider;
+        readonly NavigationManager _navigationManager;
 
-        public AuthServices(HttpClient httpClient, ILocalStorageService localStorage, ApiAuthenticationStateProvider authStateProvider)
+        public AuthServices(HttpClient httpClient, ILocalStorageService localStorage, ApiAuthenticationStateProvider authStateProvider, NavigationManager navigationManager)
         {
             _httpClient = httpClient;
             _localStorage = localStorage;
             _authStateProvider = authStateProvider;
+            _navigationManager = navigationManager;
         }
 
         public async Task<GeneralResponse> AssignUserRoleAsync(AssignUserRoleRequestDTO model)
@@ -101,7 +103,7 @@ namespace Application.Services.Authen.UI
 
         public async Task<GeneralResponse> CreateSuperAdminAsync()
         {
-            var result = await _httpClient.PostAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.CreateSuperAdminAccount}",null);
+            var result = await _httpClient.PostAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.CreateSuperAdminAccount}", null);
 
             if (!result.IsSuccessStatusCode)
                 return new GeneralResponse()
@@ -133,9 +135,9 @@ namespace Application.Services.Authen.UI
             return response;
         }
 
-        public async Task<GeneralResponse> DeleteUserAsync(string userName)
+        public async Task<GeneralResponse> DeleteUserAsync(UpdateDeleteRequest model)
         {
-            var result = await _httpClient.PostAsJsonAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.DeleteUser}", userName);
+            var result = await _httpClient.PostAsJsonAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.DeleteUser}", model);
 
             if (!result.IsSuccessStatusCode)
                 return new GeneralResponse()
@@ -203,6 +205,8 @@ namespace Application.Services.Authen.UI
             await _authStateProvider.ClearCacheAsync();
             ((ApiAuthenticationStateProvider)_authStateProvider).MarkUserAsLoggedOut();
             _httpClient.DefaultRequestHeaders.Authorization = null;
+
+            _navigationManager.NavigateTo("/login");
         }
 
         public Task<LoginResponse> RefreshTokenAsync(RefreshTokenRequestDTO model)

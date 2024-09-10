@@ -13,9 +13,9 @@ namespace Application.DTOs.Request.Account
         [Required(AllowEmptyStrings = false, ErrorMessage = "User Name is required")]
         public string? UserName { get; set; }
 
-        [Required,DataType(DataType.Password)]
-        [RegularExpression("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*_]).{8,}$",
-            ErrorMessage ="Yor password must be a mix of Alphanumeric and special characters")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Password is required"),DataType(DataType.Password)]
+        //[RegularExpression("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*_]).{8,}$",
+        //    ErrorMessage = "Yor password must be a mix of Alphanumeric and special characters")]
         public string Password { get; set; } = string.Empty;
     }
 }

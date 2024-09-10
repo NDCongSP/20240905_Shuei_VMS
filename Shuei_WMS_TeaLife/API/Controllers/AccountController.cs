@@ -90,11 +90,11 @@ namespace API.Controllers
         }
 
         [HttpPost(ApiRoutes.Identity.DeleteUser)]
-        public async Task<ActionResult<GeneralResponse>> DeleteAccountAsync(string userName)
+        public async Task<ActionResult<GeneralResponse>> DeleteAccountAsync(UpdateDeleteRequest model)
         {
             if (!ModelState.IsValid) return BadRequest("Model cannot be null");
 
-            return Ok(await account.DeleteUserAsync(userName));
+            return Ok(await account.DeleteUserAsync(model));
         }
 
         [HttpPost(ApiRoutes.Identity.DeleteUserRole)]

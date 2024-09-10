@@ -21,14 +21,14 @@
                         <Authorized>
                             <RadzenLabel>@context.User?.Identity?.Name</RadzenLabel>
                             <RadzenAppearanceToggle />
-                            <RadzenProfileMenu>
+                            <RadzenProfileMenu Click="OnParentClicked">
                                 <Template>
                                     <RadzenIcon Icon="account_circle" />
                                 </Template>
                                 <ChildContent>
                                     <RadzenProfileMenuItem Visible="true" Text="User info" Path="/dialogcardpageuserinfo" Icon="manage_accounts"></RadzenProfileMenuItem>
-                                    <RadzenProfileMenuItem Visible="@context.User.IsInRole(ConstantExtention.Roles.SupperAdmin)" Text="Users manager" Path="/usersmanager" Icon="people_alt"></RadzenProfileMenuItem>
-                                    <RadzenProfileMenuItem Text="Logout" Path="/login" Icon="logout"></RadzenProfileMenuItem>
+                                    <RadzenProfileMenuItem Visible="@context.User.IsInRole(ConstantExtention.Roles.SupperAdmin)" Text="Users manager" Path="/" Icon="people_alt"></RadzenProfileMenuItem>
+                                    <RadzenProfileMenuItem Text="Logout" Icon="logout"></RadzenProfileMenuItem>
                                 </ChildContent>
                             </RadzenProfileMenu>
                         </Authorized>

@@ -32,6 +32,8 @@ namespace Infrastructure.Repos
             => await userManager.FindByEmailAsync(email);
         private async Task<ApplicationUser> FindUserByNameAsync(string name)
             => await userManager.FindByNameAsync(name);
+        private async Task<ApplicationUser> FindUserByIdAsync(string id)
+            => await userManager.FindByIdAsync(id);
         private async Task<IdentityRole> FindRoleByNameAsync(string roleName)
             => await roleManager.FindByNameAsync(roleName);
 
@@ -89,7 +91,10 @@ namespace Infrastructure.Repos
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var expiry = DateTime.Now.AddMinutes(double.TryParse(config["Jwt:JwtExpiryTime"], out double value) ? value : 60);
+            var tt = config["Jwt:AddTimeType"];
+            var expiry = tt != "Second" ?
+                                        DateTime.Now.AddMinutes(double.TryParse(config["Jwt:JwtExpiryTime"], out double value) ? value : 60) :
+                                        DateTime.Now.AddSeconds(double.TryParse(config["Jwt:JwtExpiryTime"], out value) ? value : 60);
 
             var userClaims = new List<Claim>()
                {
@@ -484,18 +489,18 @@ namespace Infrastructure.Repos
             }
         }
 
-        public async Task<GeneralResponse> DeleteUserAsync(string userName)
+        public async Task<GeneralResponse> DeleteUserAsync(UpdateDeleteRequest model)
         {
             try
             {
-                //if (!string.IsNullOrEmpty(userName))
-                //    return new GeneralResponse()
-                //    {
-                //        Flag = false,
-                //        Message = "Model state cannot be empty"
-                //    };
+                if (model == null)
+                    return new GeneralResponse()
+                    {
+                        Flag = false,
+                        Message = "Model state cannot be empty"
+                    };
 
-                var user = await FindUserByNameAsync(userName);
+                var user = await FindUserByIdAsync(model.Id);
                 if (user == null)
                     return new GeneralResponse()
                     {

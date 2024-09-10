@@ -8,7 +8,7 @@
 
         public static class Roles
         {
-            public const string SupperAdmin = "SupperAdmin";
+            public const string SupperAdmin = "SuperAdmin";
             public const string Admin = "Admin";
             public const string Operator = "Operator";
         }

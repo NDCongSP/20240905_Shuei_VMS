@@ -1,12 +1,11 @@
  SELECT *
   FROM AspNetRoles
+  SELECT *
+  FROM [Permissions]
   
   SELECT *
   FROM AspNetUserRoles
   
-  SELECT *
-  FROM [AspNetUsers]
-
   SELECT *
   FROM [AspNetUsers]
 
