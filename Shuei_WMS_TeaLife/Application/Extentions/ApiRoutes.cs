@@ -55,5 +55,11 @@ namespace Application.Extentions
         {
             public const string BasePath = "api/units";
         }
+
+        public static class Locations
+        {
+            public const string BasePath = "api/Location";
+            public const string DeleteLocation = "deletelocation";
+        }
     }
 }

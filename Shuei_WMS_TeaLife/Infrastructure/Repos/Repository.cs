@@ -11,11 +11,13 @@ namespace Infrastructure.Repos
     {
         public IProduct SProduct { get; set; }
         public IUnit SUnit { get; set; }
+        public ILocation SLocation { get; set; }
 
-        public Repository(IProduct sProduct = null, IUnit sUnit = null)
+        public Repository(IProduct sProduct = null, IUnit sUnit = null, ILocation sLocation = null)
         {
             SProduct = sProduct;
             SUnit = sUnit;
+            SLocation = sLocation;
         }
     }
 }

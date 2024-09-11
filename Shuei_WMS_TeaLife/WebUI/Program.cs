@@ -67,7 +67,8 @@ builder.Services.AddHttpClient("API")
     //})
     .AddHttpMessageHandler<AuthenticationHeaderHandler>()    
     .UseWithRestEaseClient<IProduct>()
-    .UseWithRestEaseClient<IUnit>();
+    .UseWithRestEaseClient<IUnit>()
+    .UseWithRestEaseClient<ILocation>();
 
 builder.Services.AddScoped<HttpClient>(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("API"));
 

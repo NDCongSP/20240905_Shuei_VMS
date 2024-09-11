@@ -77,7 +77,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
@@ -86,6 +86,8 @@ if (app.Environment.IsDevelopment())
         //c.RoutePrefix = string.Empty; // Truy cập Swagger tại đường dẫn gốc ("/")
     });
 }
+
+
 
 // app.UseHttpsRedirection();//use https
 

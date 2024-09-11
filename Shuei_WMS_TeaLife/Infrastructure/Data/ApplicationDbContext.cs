@@ -1,4 +1,5 @@
-﻿using Domain.Entity.Authentication;
+﻿using Domain.Entity;
+using Domain.Entity.Authentication;
 using Domain.Entity.Products;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ namespace Infrastructure.Data
         public DbSet<Category> Categorys { get; set; }
         public DbSet<Permissions> Permissions { get; set; }
         public DbSet<RoleToPermissions> RoleToPermissions { get; set; }
+        public DbSet<Location> Locations { get; set; }
 
         //protected override void OnModelCreating(ModelBuilder builder)
         //{

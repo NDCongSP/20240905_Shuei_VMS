@@ -1,0 +1,35 @@
+﻿@page "/locations"
+@using Domain.Entity
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+@if (_locations != null || _locations.Count > 0)
+{
+    <h3>@_locations.FirstOrDefault().Id/ @_locations.FirstOrDefault().Name</h3>
+}
+
+@code {
+    List<Location> _locations = new List<Location>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var result = await _sLocation.GetAllAsync();
+
+            if (!result.Succeeded)
+            {
+                _notificationService.Notify(new NotificationMessage()
+                    {
+                        Severity = NotificationSeverity.Error,
+                        Summary = "Error",
+                        Detail = "Did not connect to API.",
+                        Duration = 2000
+                    });
+            }
+
+            _locations = result.Data.ToList();
+        }
+        catch { }
+    }
+}

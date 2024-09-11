@@ -19,7 +19,7 @@ namespace Application.Services.Authen
         Task<GeneralResponse> ChangeUserRoleAsync(AssignUserRoleRequestDTO model);
         Task<GeneralResponse> ChangePassAsync(ChangePassRequestDTO model);
         Task<GeneralResponse> AssignUserRoleAsync(AssignUserRoleRequestDTO model);
-        Task<GeneralResponse> DeleteUserAsync(UpdateDeleteRequest model);
+        Task<GeneralResponse> DeleteUserAsync(UpdateDeleteRequestDTO model);
 
         Task<GeneralResponse> DeleteUserRoleAsync(AssignUserRoleRequestDTO model);
         Task<GeneralResponse> UpdateRoleAsync(UpdateRoleNameRequestDTO model);

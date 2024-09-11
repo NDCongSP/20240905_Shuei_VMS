@@ -18,7 +18,7 @@ namespace Infrastructure.Repos
                 return await Result<List<Product>>.SuccessAsync(dbContext.Products.ToList());
             }
             catch (Exception ex)
-            {
+            {   
                 return await Result<List<Product>>.FailAsync(ex.Message);
             }
         }

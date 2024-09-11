@@ -34,7 +34,7 @@
                                                   Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => EditItemAsync(data.UserName))" @onclick:stopPropagation="true" />
                                     <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter"
                                                   Size="ButtonSize.Medium" class="my-1 ms-1"
-                                                  Click="@(args => DeleteItemAsync(new Application.DTOs.Request.Account.UpdateDeleteRequest(){Id=data.Id,Name=data.UserName}))"
+                                                  Click="@(args => DeleteItemAsync(new Application.DTOs.Request.Account.UpdateDeleteRequestDTO(){Id=data.Id,Name=data.UserName}))"
                                                   @onclick:stopPropagation="true" />
                                 </Template>
                             </RadzenDataGridColumn>

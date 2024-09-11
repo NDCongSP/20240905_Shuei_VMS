@@ -90,7 +90,7 @@ namespace API.Controllers
         }
 
         [HttpPost(ApiRoutes.Identity.DeleteUser)]
-        public async Task<ActionResult<GeneralResponse>> DeleteAccountAsync(UpdateDeleteRequest model)
+        public async Task<ActionResult<GeneralResponse>> DeleteAccountAsync(UpdateDeleteRequestDTO model)
         {
             if (!ModelState.IsValid) return BadRequest("Model cannot be null");
 

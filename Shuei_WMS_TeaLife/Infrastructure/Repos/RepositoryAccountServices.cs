@@ -489,7 +489,7 @@ namespace Infrastructure.Repos
             }
         }
 
-        public async Task<GeneralResponse> DeleteUserAsync(UpdateDeleteRequest model)
+        public async Task<GeneralResponse> DeleteUserAsync(UpdateDeleteRequestDTO model)
         {
             try
             {

@@ -149,6 +149,23 @@ namespace Infrastructure.Migrations
                     b.ToTable("ROleToPermission");
                 });
 
+            modelBuilder.Entity("Domain.Entity.Location", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Location");
+                });
+
             modelBuilder.Entity("Domain.Entity.Products.Category", b =>
                 {
                     b.Property<Guid>("Id")

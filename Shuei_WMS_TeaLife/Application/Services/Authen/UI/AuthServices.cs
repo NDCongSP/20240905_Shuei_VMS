@@ -135,7 +135,7 @@ namespace Application.Services.Authen.UI
             return response;
         }
 
-        public async Task<GeneralResponse> DeleteUserAsync(UpdateDeleteRequest model)
+        public async Task<GeneralResponse> DeleteUserAsync(UpdateDeleteRequestDTO model)
         {
             var result = await _httpClient.PostAsJsonAsync($"{ApiRoutes.Identity.BasePath}/{ApiRoutes.Identity.DeleteUser}", model);
 

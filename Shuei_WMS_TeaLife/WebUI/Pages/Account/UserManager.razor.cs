@@ -29,7 +29,7 @@ namespace WebUI.Pages.Account
             RefreshDataAsync();
         }
 
-        async Task DeleteItemAsync(UpdateDeleteRequest model)
+        async Task DeleteItemAsync(UpdateDeleteRequestDTO model)
         {
             try
             {
