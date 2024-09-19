@@ -7,6 +7,12 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//set cho 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Listen(System.Net.IPAddress.Any, 9501);
+});//set port
+
 // Add services to the container.
 
 builder.Services.AddControllers();

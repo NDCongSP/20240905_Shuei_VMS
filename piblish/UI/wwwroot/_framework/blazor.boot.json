@@ -1,15 +1,15 @@
 {
   "mainAssemblyName": "WebUI",
   "resources": {
-    "hash": "sha256-QyyiwPi35fzkcl1yYlFlwCzV/cUHkY3GssH02lLh8ic=",
+    "hash": "sha256-4DJloHjKi9hV/QM7ydmCpqM+rfee/abJ5zJfQ6nwvKQ=",
     "jsModuleNative": {
-      "dotnet.native.8.0.8.w3ph3xbt8t.js": "sha256-juC5sA7gHTLXFEhAKgdM2/RavswpwCtDfjYGsAz2FXg="
+      "dotnet.native.8.0.8.rdm84t5ni1.js": "sha256-XEvLn12Ns6aS7FvHD9Z2NrXNTkvTCsGYsp622vcWp2A="
     },
     "jsModuleRuntime": {
-      "dotnet.runtime.8.0.8.53twkdtph8.js": "sha256-0Dpj/NkVD5WqSC16ZvJLmlc38iv9+Je+umYBVOycPVU="
+      "dotnet.runtime.8.0.8.80cvijctdx.js": "sha256-0Dpj/NkVD5WqSC16ZvJLmlc38iv9+Je+umYBVOycPVU="
     },
     "wasmNative": {
-      "dotnet.native.wasm": "sha256-OcUTcd7qQceenWEF93409WZcaXp2qQbEyhdchog4RUE="
+      "dotnet.native.wasm": "sha256-S8IkFCgwqGbQOlTOYH/Yc5TVI4p07i8nCXBTnSB37p0="
     },
     "icu": {
       "icudt_CJK.dat": "sha256-SZLtQnRc0JkwqHab0VUVP7T3uBPSeYzxzDnpxPpUnHk=",
@@ -17,9 +17,9 @@
       "icudt_no_CJK.dat": "sha256-L7sV7NEYP37/Qr2FPCePo5cJqRgTXRwGHuwF5Q+0Nfs="
     },
     "assembly": {
-      "Application.wasm": "sha256-kxkGWUwzuGXmO3ST2BiE7WD5Ee8b0V3O5lb9/XnVZmc=",
+      "Application.wasm": "sha256-sye8T56xLR9CZ0Yd0g/YFg0B6g1P0J1KJO97eS0Qd/k=",
       "Blazored.LocalStorage.wasm": "sha256-OaMAAd5n7ORfyur5e3QIyEVKJ76MKIvwbg7/icnnYcU=",
-      "Domain.wasm": "sha256-VxJdLe5ZU2H+d7stiaPlqMeJApOqaj4hWnI2XIA8Nro=",
+      "Domain.wasm": "sha256-Kva+bKD8oSGiEo2bgJH0jJzZC6OOxdtIeaSV04DYNpw=",
       "Mapster.Core.wasm": "sha256-TtVD3ZLBnfkyp2wZGh0Zdq76kODF5kS8P6l91a7SVDA=",
       "Mapster.wasm": "sha256-zMqum/r3XCq0wm80zzfaEQ4LR5DJZnx7FXCghCHunAA=",
       "Microsoft.AspNetCore.Authorization.wasm": "sha256-S1eui8u8YtyXEsEsaFBzg0ZjahWrDanloQ7z5IGyEYs=",
@@ -107,7 +107,7 @@
       "System.Xml.ReaderWriter.wasm": "sha256-7SEAUeN3/64WLhzpbWcWhCqLJD4wsPFdLNbtJjWfP24=",
       "System.Xml.XDocument.wasm": "sha256-BNfH92A0LaMfznE7NQFrfL0X1sP66dAMlr+F3zCOsfg=",
       "Toolbelt.Blazor.HttpClientInterceptor.wasm": "sha256-qPEQ/Wj0nubY10Spd3sIbsFekpUSnvR8gdRfzHj1BIk=",
-      "WebUI.wasm": "sha256-z7nOHohqx5qflZODATk1w2AqSL226ej6bLPAiLZRBSc="
+      "WebUI.wasm": "sha256-0VIrTapt6SilzKmO0SrMAue9cbaFJun7MZJkd/OOlNQ="
     }
   },
   "cacheBootResources": true,
